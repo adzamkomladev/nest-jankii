@@ -9,15 +9,32 @@ import {
   ParseUUIDPipe,
   ValidationPipe,
 } from '@nestjs/common';
+import {
+  ApiBadRequestResponse,
+  ApiCreatedResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
+
 import { PostsService } from './posts.service';
+
+import { Post as PostEntity } from './post.entity';
+
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 
 @Controller('posts')
+@ApiTags('posts')
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
   @Post()
+  @ApiOperation({ summary: 'Create a post' })
+  @ApiCreatedResponse({
+    description: 'The post has been successfully created.',
+    type: PostEntity,
+  })
+  @ApiBadRequestResponse({ description: 'Bad Request' })
   create(@Body(ValidationPipe) createPostDto: CreatePostDto) {
     return this.postsService.create(createPostDto);
   }
