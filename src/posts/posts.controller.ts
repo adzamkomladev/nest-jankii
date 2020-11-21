@@ -58,6 +58,7 @@ export class PostsController {
   }
 
   @Put(':id')
+  @ApiOperation({ summary: 'Update a post.' })
   @ApiNoContentResponse({ description: 'Post updated.' })
   @ApiNotFoundResponse({ description: 'Post not found.' })
   @ApiBadRequestResponse({ description: 'Bad Request.' })
@@ -69,6 +70,7 @@ export class PostsController {
   }
 
   @Delete(':id')
+  @ApiOperation({ summary: 'Delete a post.' })
   @ApiNoContentResponse({ description: 'Post deleted.' })
   @ApiNotFoundResponse({ description: 'Post not found.' })
   remove(@Param('id', ParseUUIDPipe) id: string) {
