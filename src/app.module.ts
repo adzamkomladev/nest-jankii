@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { PostsModule } from './posts/posts.module';
+import { GoogleCloudModule } from './google-cloud/google-cloud.module';
 
 import appConfig from './config/app.config';
 import databaseConfig from './config/database.config';
@@ -20,6 +21,7 @@ import databaseConfig from './config/database.config';
       inject: [ConfigService],
     }),
     PostsModule,
+    GoogleCloudModule,
   ],
 })
 export class AppModule {}
