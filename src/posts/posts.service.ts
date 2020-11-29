@@ -6,20 +6,20 @@ import {
 
 import { PostsRepository } from './posts.repository';
 
-import { CreatePostDto } from './dto/create-post.dto';
-import { UpdatePostDto } from './dto/update-post.dto';
-
 import { Post } from './post.entity';
+
+import { CreatePostDto } from './create-post.dto';
 
 @Injectable()
 export class PostsService {
   constructor(private readonly postsRepository: PostsRepository) {}
 
   create(createPostDto: CreatePostDto): Promise<Post> {
-    const post = new Post();
-    post.body = createPostDto.body;
-
-    return this.postsRepository.save(post);
+    try {
+      return this.postsRepository.createPost(createPostDto);
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to create Post!');
+    }
   }
 
   findAll(): Promise<Post[]> {
@@ -28,19 +28,6 @@ export class PostsService {
 
   findOneById(id: string): Promise<Post> {
     return this.findOneByUuid(id);
-  }
-
-  async update(id: string, updatePostDto: UpdatePostDto): Promise<void> {
-    const post = await this.findOneByUuid(id);
-
-    try {
-      post.body = updatePostDto.body;
-      await this.postsRepository.save(post);
-    } catch (error) {
-      throw new InternalServerErrorException(
-        `Failed to update Post with id - ${id}!`,
-      );
-    }
   }
 
   async remove(id: string): Promise<void> {

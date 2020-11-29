@@ -1,3 +1,5 @@
+import { ApiProperty } from '@nestjs/swagger';
+
 import {
   Column,
   CreateDateColumn,
@@ -5,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { ApiProperty } from '@nestjs/swagger';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class Post {
@@ -14,14 +16,19 @@ export class Post {
   id: string;
 
   @ApiProperty()
-  @Column({ length: 180 })
-  body: string;
+  @Column({ length: 180, nullable: true })
+  body?: string;
+
+  @ApiProperty()
+  @Column({ type: 'text', nullable: true })
+  url?: string;
 
   @ApiProperty()
   @CreateDateColumn()
   createdAt: Date;
 
   @ApiProperty()
+  @Exclude()
   @UpdateDateColumn()
   updatedAt: Date;
 }

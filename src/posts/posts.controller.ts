@@ -3,11 +3,12 @@ import {
   Get,
   Post,
   Body,
-  Put,
   Param,
   Delete,
   ParseUUIDPipe,
   ValidationPipe,
+  ClassSerializerInterceptor,
+  UseInterceptors,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -23,11 +24,11 @@ import { PostsService } from './posts.service';
 
 import { Post as PostEntity } from './post.entity';
 
-import { CreatePostDto } from './dto/create-post.dto';
-import { UpdatePostDto } from './dto/update-post.dto';
+import { CreatePostDto } from './create-post.dto';
 
-@Controller('api/v1.0/posts')
 @ApiTags('posts')
+@Controller('api/v1.0/posts')
+@UseInterceptors(ClassSerializerInterceptor)
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
@@ -55,18 +56,6 @@ export class PostsController {
   @ApiNotFoundResponse({ description: 'Post not found.' })
   findOne(@Param('id', ParseUUIDPipe) id: string) {
     return this.postsService.findOneById(id);
-  }
-
-  @Put(':id')
-  @ApiOperation({ summary: 'Update a post.' })
-  @ApiNoContentResponse({ description: 'Post updated.' })
-  @ApiNotFoundResponse({ description: 'Post not found.' })
-  @ApiBadRequestResponse({ description: 'Bad Request.' })
-  update(
-    @Param('id', ParseUUIDPipe) id: string,
-    @Body(ValidationPipe) updatePostDto: UpdatePostDto,
-  ) {
-    return this.postsService.update(id, updatePostDto);
   }
 
   @Delete(':id')
